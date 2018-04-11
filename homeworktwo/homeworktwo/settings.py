@@ -25,7 +25,7 @@ SECRET_KEY = 'tz=t7391s1*7xo7b4_o6ffi*dh1vfhc2%ckqf535-vfg(gd!i!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['13.59.107.83']
 
 
 # Application definition
@@ -126,4 +126,3 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S.%fZ",
 }
-
