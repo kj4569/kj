@@ -1,0 +1,251 @@
+~~~
+
+
+1.  django-cors-headers를 설치
+
+pip3 install django-cors-headers
+
+
+2. selectors: initial state
+
+
+3. promises/actions.js
+
+let nextPromiseId = 0
+export const addPromise = (sinceWhen, tilWhen, user2) => {
+    return {
+	type: 'ADD_Promise',
+	id: nextPromiseId++,
+	text
+  sinceWhen
+  tilWhen
+  user2
+    }
+}
+
+
+
+4. reducer need to
+- ADD_Promise, make new promise in PromiseList
+
+import { initialState } from './selectors'
+
+const promises_reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'ADD_Promise':
+      return [
+        ...state,
+        {
+					id: promise.id,
+					text: promise.text,
+					sinceWhen: promise.sinceWhen,
+          tilWhen: promise.tilWhen,
+          user2: promise.user2
+				}
+      ]
+}
+
+export default promises_reducer
+
+
+
+
+5. make components
+
+- yo arc:component
+
+- Atom: Promise, Button, (another button?), User
+- Molecule: AddPromise, Promises, (UserInfo?)
+
+
+
+6. component working
+
+import React, { PropTypes } from 'react'
+import styled from 'styled-components'
+import { font } from 'styled-theme'
+
+const Styledli = styled.li`
+  font-family: ${font('primary')};
+`
+
+const Promise = ({ id, sinceWhen, tilWhen, user2 }) => (
+	<Styledli
+
+	>
+	{id}
+    </Styledli>
+)
+
+Promise.propTypes = {
+  id: PropTypes.number.isRequired,
+  sinceWhen: PropTypes.string.isRequired,
+  tilWhen: PropTypes.string.isRequired,
+  user2: PropTypes.string.isRequired,
+  reverse: PropTypes.bool,
+}
+
+
+
+export default Promise
+
+
+
+
+7. AddPromise
+
+
+import React, { PropTypes } from 'react'
+import styled from 'styled-components'
+import { font, palette } from 'styled-theme'
+import Button from '../../../components/atoms/Button'
+
+const Wrapper = styled.div`
+  font-family: ${font('primary')};
+  color: ${palette('grayscale', 0)};
+`
+
+export const AddPromise = ({ statefunction, onAddPromise, onPostPromise }) => {
+    let input;
+    console.log(onAddPromise);
+    console.log('asdf')
+    const onSubmit = () => {
+	console.log('outer scope of if');
+	if (input != undefined) {
+	    console.log('inner scope of if');
+	    onAddTodo(input.value);
+	    input.value = '';
+	}
+    };
+
+    const onPost = () => {
+	if (input != undefined) {
+	    onPostPromise(input.value);
+	    input.value = '';
+	}
+    };
+
+    return (
+	    <div>
+   	    <input ref={node => {input = node;}} />
+  	    <Button type="submit" onClick={onSubmit}>ADD Todo</Button>
+	    <Button type="submit" onClick={onPost}>POST Todo</Button>
+	    </div>
+    );
+};
+
+AddPromise.propTypes = {
+    reverse: PropTypes.bool,
+    children: PropTypes.node,
+}
+
+export default AddPromise
+
+
+
+
+8. Promises
+
+
+import React, { PropTypes } from 'react'
+import styled from 'styled-components'
+import { font } from 'styled-theme'
+import Todo from '../../../components/atoms/Promise'
+
+const Styledul = styled.ul`
+  font-family: ${font('primary')};
+`
+
+export const Promises = ({ promisesstate = [], onPromiseClick }) => {
+    return (
+	    <Styledul>
+	    {promisesstate.map(promise =>
+			       <Promise key={promise.id}
+			       {...promise}
+			       onClick={() => onPromiseClick(promise.id)}
+			       />
+			      )}
+	    </Styledul>
+  );
+};
+
+Promises.propTypes = {
+  reverse: PropTypes.bool,
+  children: PropTypes.node,
+}
+
+Promises.propTypes = {
+    promisesstate: PropTypes.arrayOf(PropTypes.shape({
+	id: PropTypes.number,
+	sinceWhen: PropTypes.string,
+  tilWhen: PropTypes.string,
+  user2: PropTypes.string,
+    })),
+    reverse: PropTypes.bool,
+}
+
+export default Promises
+
+
+
+
+9. User
+
+not now.
+
+
+
+
+10. /src/components/pages/HomePage
+
+import React from 'react'
+import AddPromise from '../../../containers/AddPromise'
+import Promises from '../../../containers/Promises'
+
+import { PageTemplate } from 'components'
+
+const HomePage = () => {
+  return (
+    <div>
+			<AddPromise/>
+			<Promises/>
+	  </div>
+  )
+}
+
+export default HomePage
+
+
+
+11. container
+
+import { connect } from 'react-redux'
+import { AddPromise } from '../components/molecules/AddPromise'
+import { addPromise, postPromiseRequest } from '../store/Promises/actions'
+
+const mapStateToProps = (state) => {
+    return {
+	statefunction : state
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+	onAddPromise: (text) => {
+	    dispatch(addPromise(sinceWhen, tilWhen, user2))
+	},
+	onPostPromise: (text) => {
+	    dispatch(postPromiseRequest(sinceWhen, tilWhen, user2))	
+	}
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddPromise)
+
+
+
+12. add actions.js
+
+
+
+13. sagas.js
