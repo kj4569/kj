@@ -10,14 +10,18 @@ color: ${palette('grayscale', 0)};
 
 export const AddTodo = ({ statefunction, onAddTodo, onPostTodo }) => {
     let input;
+    let input2;
+    let input3;
     console.log(onAddTodo);
     console.log('asdf')
     const onSubmit = () => {
 	console.log('outer scope of if');
-	if (input != undefined) {
+	if (input != undefined && input2 != undefined && input3 != undefined) {
 	    console.log('inner scope of if');
-	    onAddTodo(input.value);
+	    onAddTodo(input.value, input2.value, input3.value);
 	    input.value = '';
+      input2.value = '';
+      input3.value = '';
 	}
     };
 
@@ -40,9 +44,9 @@ export const AddTodo = ({ statefunction, onAddTodo, onPostTodo }) => {
         <h4> Promises </h4>
    	    sinceWhen: <input ref={node => {input = node;}} />
         <br/>
-        tilWhen: <input ref={node => {input = node;}} />
+        tilWhen: <input ref={node => {input2 = node;}} />
         <br/>
-        user2: <input ref={node => {input = node;}} />
+        user2: <input ref={node => {input3 = node;}} />
         <br/>
         <br/>
   	    <Button type="submit" onClick={onSubmit}>ADD Promise</Button>

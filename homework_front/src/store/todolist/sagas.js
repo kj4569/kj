@@ -2,11 +2,11 @@ import { take, put, call, fork } from 'redux-saga/effects'
 import api from 'services/api'
 import * as actions from './actions'
 
-const url = 'http://127.0.0.1:8000/todos/'
+const url = 'http://0.0.0.0:8000/promises/'
 
-export function* postTodo(text) {
-		console.log(text)
-    const data = yield call(api.post, url, {done: true, contents: text})
+export function* postTodo(sinceWhen, tilWhen, user2) {
+		console.log(sinceWhen)
+    const data = yield call(api.post, url, {sinceWhen: sinceWhen, tilWhen:tilWhen, user2:user2})
 }
 
 export function* watchPostTodoRequest() {
