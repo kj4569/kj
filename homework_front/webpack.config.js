@@ -1,82 +1,76 @@
 const path = require('path')
+const webpack = require('webpack')
+const WebpackMd5Hash = require('webpack-md5-hash')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const devServer = require('@webpack-blocks/dev-server2')
-const splitVendor = require('webpack-blocks-split-vendor')
-const happypack = require('webpack-blocks-happypack')
 
-const {
-  addPlugins, createConfig, entryPoint, env, setOutput,
-  sourceMaps, defineConstants, webpack,
-} = require('@webpack-blocks/webpack2')
-
-const host = process.env.HOST || 'localhost'
+const ip = process.env.IP || '0.0.0.0'
 const port = process.env.PORT || 3000
-const publicPath = `/${process.env.PUBLIC_PATH || ''}/`.replace('//', '/')
-const sourcePath = path.join(process.cwd(), 'src')
-const outputPath = path.join(process.cwd(), 'dist')
+const DEBUG = process.env.NODE_ENV !== 'production'
+const PUBLIC_PATH = `/${process.env.PUBLIC_PATH || ''}/`.replace('//', '/')
 
-const babel = () => () => ({
-  module: {
-    rules: [
-      { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader' },
-    ],
+const isVendor = ({ userRequest }) => (
+  userRequest &&
+  userRequest.indexOf('node_modules') >= 0 &&
+  userRequest.match(/\.js$/)
+)
+
+const config = {
+  devtool: DEBUG ? 'eval' : false,
+  entry: {
+    app: ['babel-polyfill', path.join(__dirname, 'src')],
   },
-})
-
-const config = createConfig([
-  entryPoint({
-    app: sourcePath,
-  }),
-  setOutput({
+  output: {
+    path: path.join(__dirname, 'dist'),
     filename: '[name].[hash].js',
-    path: outputPath,
-    publicPath,
-  }),
-  defineConstants({
-    'process.env.NODE_ENV': process.env.NODE_ENV,
-    'process.env.PUBLIC_PATH': publicPath,
-  }),
-  addPlugins([
+    publicPath: PUBLIC_PATH,
+  },
+  resolve: {
+    modules: ['src', 'node_modules'],
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.PUBLIC_PATH': JSON.stringify(PUBLIC_PATH),
+    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: path.join(process.cwd(), 'public/index.html'),
+      template: path.join(__dirname, '/public/index.html'),
     }),
-  ]),
-  happypack([
-    babel(),
-  ]),
-  () => ({
-    resolve: {
-      modules: ['src', 'node_modules'],
-    },
-    module: {
-      rules: [
-        { test: /\.(png|jpe?g|svg)$/, loader: 'url-loader?&limit=8000' },
-        { test: /\.(woff2?|ttf|eot)$/, loader: 'url-loader?&limit=8000' },
-      ],
-    },
-  }),
+  ],
+  module: {
+    rules: [
+      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.png$/, loader: 'url-loader?prefix=images/&limit=8000&mimetype=image/png' },
+      { test: /\.jpg$/, loader: 'url-loader?prefix=images/&limit=8000&mimetype=image/jpeg' },
+      { test: /\.woff$/, loader: 'url-loader?prefix=fonts/&limit=8000&mimetype=application/font-woff' },
+      { test: /\.ttf$/, loader: 'file-loader?prefix=fonts/' },
+      { test: /\.eot$/, loader: 'file-loader?prefix=fonts/' },
+    ],
+  },
+}
 
-  env('development', [
-    devServer({
-      contentBase: 'public',
-      stats: 'errors-only',
-      publicPath,
-      host,
-      port,
+if (DEBUG) {
+  config.entry.app.unshift(
+    `webpack-dev-server/client?http://${ip}:${port}/`,
+    'webpack/hot/only-dev-server',
+    'react-hot-loader/patch'
+  )
+
+  config.plugins = config.plugins.concat([
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+  ])
+} else {
+  config.output.filename = '[name].[chunkHash].js'
+
+  config.plugins = config.plugins.concat([
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: isVendor,
     }),
-    sourceMaps(),
-    addPlugins([
-      new webpack.NamedModulesPlugin(),
-    ]),
-  ]),
-
-  env('production', [
-    splitVendor(),
-    addPlugins([
-      new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
-    ]),
-  ]),
-])
+    new WebpackMd5Hash(),
+    new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
+  ])
+}
 
 module.exports = config

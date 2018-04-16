@@ -10,19 +10,14 @@
     "react-hot-loader/babel"
   ],
   "env": {
-    "development": {
+    "production": {
       "plugins": [
-        "transform-es2015-modules-commonjs"
+        "transform-react-remove-prop-types"
       ]
     },
     "test": {
       "plugins": [
         "transform-es2015-modules-commonjs"
-      ]
-    },
-    "production": {
-      "plugins": [
-        "transform-react-remove-prop-types"
       ]
     }
   }

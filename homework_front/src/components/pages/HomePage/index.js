@@ -1,12 +1,12 @@
 import React from 'react'
-import AddPromise from '../../../containers/AddPromise'
-import Promises from '../../../containers/Promises'
+import AddTodo from '../../../containers/AddTodo'
+import TodoList from '../../../containers/TodoList'
 
 const HomePage = () => {
   return (
-    <div>
-			<AddPromise/>
-			<Promises/>
+	  <div>
+			<AddTodo/>
+			<TodoList/>
 	  </div>
   )
 }

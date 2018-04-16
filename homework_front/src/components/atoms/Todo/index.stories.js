@@ -1,11 +1,11 @@
 import React from 'react'
 import { storiesOf } from '@kadira/storybook'
-import User from '.'
+import Todo from '.'
 
-storiesOf('User', module)
+storiesOf('Todo', module)
   .add('default', () => (
-    <User>Hello</User>
+    <Todo>Hello</Todo>
   ))
   .add('reverse', () => (
-    <User reverse>Hello</User>
+    <Todo reverse>Hello</Todo>
   ))

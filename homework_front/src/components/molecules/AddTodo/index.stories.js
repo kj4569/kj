@@ -1,11 +1,11 @@
 import React from 'react'
 import { storiesOf } from '@kadira/storybook'
-import Promise from '.'
+import { AddTodo } from 'components'
 
-storiesOf('Promise', module)
+storiesOf('AddTodo', module)
   .add('default', () => (
-    <Promise>Hello</Promise>
+    <AddTodo>Hello</AddTodo>
   ))
   .add('reverse', () => (
-    <Promise reverse>Hello</Promise>
+    <AddTodo reverse>Hello</AddTodo>
   ))

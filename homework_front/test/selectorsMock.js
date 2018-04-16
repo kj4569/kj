@@ -1,12 +1,12 @@
 const selector = () => {}
 
 const fromEntity = new Proxy({}, {
-  get: () => selector,
-  apply: () => selector,
+  get: (target, property) => selector,
+  apply: (target, thisArg, argumentsList) => selector
 })
 
 const selectors = new Proxy({}, {
-  get: () => fromEntity,
+  get: (target, property) => fromEntity
 })
 
 module.exports = selectors

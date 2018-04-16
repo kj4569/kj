@@ -3,19 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm run dev",
-    "env:dev": "cross-env NODE_ENV=development",
-    "env:prod": "cross-env NODE_ENV=production",
-    "test": "jest",
+    "start": "node server",
+    "test": "cross-env NODE_ENV=test jest",
     "coverage": "npm test -- --coverage",
     "postcoverage": "opn coverage/lcov-report/index.html",
-    "lint": "eslint src src-clean test .storybook webpack.config.js",
+    "lint": "eslint src src-clean .storybook",
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "dev": "npm run env:dev -- webpack-dev-server --progress",
     "build:clean": "rimraf \"dist/!(.git*|Procfile)**\"",
     "build:copy": "copyfiles -u 1 public/* public/**/* dist",
     "prebuild": "npm run build:clean && npm run build:copy",
-    "build": "npm run env:prod -- webpack --progress"
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "jest": {
     "modulePathIgnorePatterns": [
@@ -34,8 +31,6 @@
   },
   "devDependencies": {
     "@kadira/storybook": "^2.35.2",
-    "@webpack-blocks/dev-server2": "^0.4.0",
-    "@webpack-blocks/webpack2": "^0.4.0",
     "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
     "babel-jest": "^19.0.0",
@@ -46,19 +41,19 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-1": "^6.16.0",
     "copyfiles": "^1.0.0",
-    "cross-env": "^4.0.0",
+    "cross-env": "^3.1.4",
     "enzyme": "^2.7.0",
     "eslint": "^3.14.0",
     "eslint-config-airbnb": "^14.0.0",
     "eslint-import-resolver-webpack": "^0.8.1",
-    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-no-unused-vars-rest": "^1.0.4",
-    "eslint-plugin-react": "^6.10.3",
-    "file-loader": "^0.11.0",
-    "happypack": "^3.0.3",
+    "eslint-plugin-react": "^6.9.0",
+    "file-loader": "^0.10.0",
     "html-webpack-plugin": "^2.26.0",
     "jest-cli": "^19.0.0",
+    "json-loader": "^0.5.4",
     "opn-cli": "^3.1.0",
     "raw-loader": "^0.5.1",
     "react-addons-test-utils": "^15.4.1",
@@ -66,8 +61,6 @@
     "rimraf": "^2.6.1",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.1",
-    "webpack-blocks-happypack": "^0.1.0",
-    "webpack-blocks-split-vendor": "^0.1.2",
     "webpack-dev-server": "^2.3.0",
     "webpack-md5-hash": "^0.0.5"
   },
@@ -79,7 +72,7 @@
     "query-string": "^4.3.2",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "react-hot-loader": "3.0.0-beta.6",
+    "react-hot-loader": "^3.0.0-beta.6",
     "react-modal": "^1.6.5",
     "react-redux": "^5.0.1",
     "react-router": "^3.0.0",
@@ -92,10 +85,5 @@
     "styled-tools": "^0.1.2",
     "validator": "^7.0.0",
     "whatwg-fetch": "^2.0.2"
-  },
-  "proxy": {
-    "/promises": {
-      "target": "http://127.0.0.1:8000/"
-    }
   }
 }

@@ -18,11 +18,7 @@
     "__BASENAME__": true
   },
   "settings": {
-    "import/resolver": {
-      "webpack": {
-        "config": "webpack.config.js"
-      }
-    }
+    "import/resolver": "webpack"
   },
   "rules": {
     "semi": [2, "never"],
